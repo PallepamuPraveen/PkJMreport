@@ -19,5 +19,5 @@ jobs:
 
     - name: Run JMeter tests
       run: |
-       docker login hub.docker.internal.cba -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+       docker login hub.docker -u ${{JMETER_USERNAME }} -p ${{JMETER_PASSWORD }}
        docker run --name=jmeter -i -v ${PWD}:/jmeter hub.docker.internal.cba/justb4/jmeter -n -t /jmeter/SampleAPITest_2mins.jmx -l /jmeter/results.jtl
