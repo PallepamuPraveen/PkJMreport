@@ -1,32 +1,15 @@
-name: Publish Docker image
+name: JMeter Performance Tests
 
-on:
-  push:
-    branches:
-      - 'main'
-  
+on: workflow_dispatch
 jobs:
-  push_to_registry:
-    name: Push Docker image to Docker Hub
-    runs-on: ubuntu-latest
+  test:
+    runs-on: [default-nonprod]
+
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
-      
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ JMETER_USERNAME }}
-          password: ${{ JMETER_PASSWORD }}
-      
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: chiabre/jmeter_plugins
-      
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          tags: latest
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Run JMeter tests
+      run: |
+       docker login hub.docker.internal.cba -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+       docker run --rm --name jmeter -i -v "$(pwd)":/tmp -p 9270:9270 chiabre/jmeter_plugins:5.5-0.1.1 -t SampleAPITest_2mins.jmx
