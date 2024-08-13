@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1691300000000</longProp>
+        <longProp name="ThreadGroup.end_time">1691300000000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Unique Values" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+import java.util.Random
+
+// Initialize random generator
+Random rand = new Random()
+
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format(&quot;%06d&quot;, rand.nextInt(900000) + 100000)
+}
+
+// Function to generate an 11-digit number starting with 0
+String generate11DigitNumber(Random rand) {
+    return &quot;0&quot; + String.format(&quot;%010d&quot;, Math.abs(rand.nextLong() % 90000000000L) + 10000000000L)
+}
+
+// List to store all rows
+List&lt;String&gt; rows = new ArrayList&lt;&gt;()
+
+// Generate 100 rows of values
+for (int i = 1; i &lt;= 100; i++) {
+    String uniqueValue1 = generate7DigitNumber(&quot;5&quot;, rand)
+    String uniqueValue2 = generate7DigitNumber(&quot;3&quot;, rand)
+    String uniqueValue3 = generate11DigitNumber(rand)
+
+    // Combine unique values into the specified format
+     String combinedValues = &quot;&quot;&quot;D|${uniqueValue1}|20240501081712|WLM_FullSubjectsVsFullList - 01052024_08:16|FullvFull|SAP~PT~+${uniqueValue3}|CUXHNVXNQD UAJXVDPHUXETQXM|19501030|Female||Sg3|CBA|P|ONBD|Y||||UNK||||CTF|WC APPLICABLE CTF GROUP|${uniqueValue2}|CTF - Delta Personal First Name and Last Name and DOB vs Full WC Individual|CUXHNVXNQD|subject_first_name|CUXHNVXNQD|configuration.detection.check.match.type.exact.match.restrictive|1|&quot;&quot;&quot;.replaceAll(&quot;\\n&quot;, &quot;&quot;)
+   rows.add(combinedValues)
+    
+    // Store uniqueValue1 in a JMeter property for the next sample
+    props.put(&quot;uniqueValue1&quot;, uniqueValue1)
+}
+
+// Define the output file path
+String outputPath = &quot;unique_values.txt&quot;
+
+// Write all rows to the file
+Files.write(Paths.get(outputPath), rows.join(System.lineSeparator()).getBytes(StandardCharsets.UTF_8))
+
+log.info(&quot;Unique values saved to file: ${outputPath}&quot;)</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Unique Values" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+
+// Retrieve uniqueValue1 from JMeter properties
+String uniqueValue1 = props.get(&quot;uniqueValue1&quot;)
+
+// Define the format for the next set of sample
+String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|FCC-152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2
+Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC
+IB&amp;M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||&quot;&quot;&quot;
+
+// Define the output file path for the next sample
+String nextOutputPath = &quot;next_sample_values.txt&quot;
+
+// Write the formatted sample to the file
+Files.write(Paths.get(nextOutputPath), nextSampleFormat.getBytes(StandardCharsets.UTF_8))
+
+log.info(&quot;Next sample values saved to file: ${nextOutputPath}&quot;)</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Unique Values" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+// Define the input file path
+String inputFilePath = &quot;input_file.txt&quot;;
+// Define the output file path for the next sample
+String nextOutputPath = &quot;next_sample_values.txt&quot;;
+// Read all lines from the input file
+List&lt;String&gt; allRecords = Files.readAllLines(Paths.get(inputFilePath), StandardCharsets.UTF_8);
+// Filter and collect 50% of the records (e.g., every other record)
+List&lt;String&gt; selectedRecords = IntStream.range(0, allRecords.size())
+   .filter(i -&gt; i % 2 == 0) // Pick every other record (this gives 50% of the records)
+   .mapToObj(allRecords::get)
+   .collect(Collectors.toList());
+// Write the selected records to the output file
+Files.write(Paths.get(nextOutputPath), selectedRecords, StandardCharsets.UTF_8);
+log.info(&quot;50% of the records saved to file: &quot; + nextOutputPath);</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
