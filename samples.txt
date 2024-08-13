@@ -1,0 +1,67 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+import java.util.Random
+
+// Initialize random generator
+Random rand = new Random()
+
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format("%06d", rand.nextInt(900000) + 100000)
+}
+
+// Function to generate an 11-digit number starting with 0
+String generate11DigitNumber(Random rand) {
+    return "0" + String.format("%010d", Math.abs(rand.nextLong() % 90000000000L) + 10000000000L)
+}
+
+// List to store all rows
+List<String> rows = new ArrayList<>()
+
+// Generate 100 rows of values
+for (int i = 1; i <= 100; i++) {
+    String uniqueValue1 = generate7DigitNumber("5", rand)
+    String uniqueValue2 = generate7DigitNumber("3", rand)
+    String uniqueValue3 = generate11DigitNumber(rand)
+
+    // Combine unique values into the specified format
+     String combinedValues = """D|${uniqueValue1}|20240501081712|WLM_FullSubjectsVsFullList - 01052024_08:16|FullvFull|SAP~PT~+${uniqueValue3}|CUXHNVXNQD UAJXVDPHUXETQXM|19501030|Female||Sg3|CBA|P|ONBD|Y||||UNK||||CTF|WC APPLICABLE CTF GROUP|${uniqueValue2}|CTF - Delta Personal First Name and Last Name and DOB vs Full WC Individual|CUXHNVXNQD|subject_first_name|CUXHNVXNQD|configuration.detection.check.match.type.exact.match.restrictive|1|""".replaceAll(\\n, "")
+   rows.add(combinedValues)
+    
+    // Store uniqueValue1 in a JMeter property for the next sample
+    props.put("uniqueValue1", uniqueValue1)
+}
+
+// Define the output file path
+String outputPath = "unique_values.txt"
+
+// Write all rows to the file
+Files.write(Paths.get(outputPath), rows.join(System.lineSeparator()).getBytes(StandardCharsets.UTF_8))
+
+log.info("Unique values saved to file: ${outputPath}")
+
+
+
+
+
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+
+// Retrieve uniqueValue1 from JMeter properties
+String uniqueValue1 = props.get("uniqueValue1")
+
+// Define the format for the next set of sample
+String nextSampleFormat = """D|${uniqueValue1}|FCC-152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2
+Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC
+IB&M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||"""
+
+// Define the output file path for the next sample
+String nextOutputPath = "next_sample_values.txt"
+
+// Write the formatted sample to the file
+Files.write(Paths.get(nextOutputPath), nextSampleFormat.getBytes(StandardCharsets.UTF_8))
+
+log.info("Next sample values saved to file: ${nextOutputPath}")
+
