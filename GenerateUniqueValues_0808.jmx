@@ -65,7 +65,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Unique Values" enabled="true">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="ParentFile" enabled="true">
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
@@ -114,7 +114,7 @@ log.info(&quot;Unique values saved to file: ${outputPath}&quot;)</stringProp>
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Sampler>
         <hashTree/>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Unique Values" enabled="false">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="IWLFile" enabled="true">
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
@@ -126,12 +126,71 @@ import java.nio.charset.StandardCharsets
 String uniqueValue1 = props.get(&quot;uniqueValue1&quot;)
 
 // Define the format for the next set of sample
-String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|FCC-152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2
-Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC
-IB&amp;M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||&quot;&quot;&quot;
+String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|FCC-152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2 Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC IB&amp;M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||&quot;&quot;&quot;
 
 // Define the output file path for the next sample
-String nextOutputPath = &quot;next_sample_values.txt&quot;
+String nextOutputPath = &quot;IWLFile.txt&quot;
+
+// Write the formatted sample to the file
+Files.write(Paths.get(nextOutputPath), nextSampleFormat.getBytes(StandardCharsets.UTF_8))
+
+log.info(&quot;Next sample values saved to file: ${nextOutputPath}&quot;)
+
+</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="IWLFile" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+import java.util.List
+// Define the input file path (from Part 1)
+String inputPath = &quot;unique_values.txt&quot;
+// Read all lines from the file
+List&lt;String&gt; allRows = Files.readAllLines(Paths.get(inputPath), StandardCharsets.UTF_8)
+// Determine 50% of the total lines
+int totalLines = allRows.size()
+int linesToProcess = totalLines / 2
+// List to store the new formatted rows
+List&lt;String&gt; processedRows = new ArrayList&lt;&gt;()
+// Process 50% of the lines to create a new template
+for (int i = 0; i &lt; linesToProcess; i++) {
+   String uniqueValue1 = allRows.get(i).split(&quot;\\|&quot;)[1] // Extract uniqueValue1 from the original row
+//   String uniqueValue1 = allRows.get(i).split(&quot;\\|&quot;)[1] // Extract uniqueValue1 from the original row
+      // Create a new formatted row using uniqueValue1 and other fixed text
+   String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|FCC-152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2 Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC IB&amp;M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||&quot;&quot;&quot;
+   processedRows.add(nextSampleFormat)
+}
+// Define the output file path for the new template
+String outputPath = &quot;50_percent_next_sample_values.txt&quot;
+// Write the processed rows to the file
+Files.write(Paths.get(outputPath), processedRows.join(System.lineSeparator()).getBytes(StandardCharsets.UTF_8))
+log.info(&quot;50% of the rows saved to file with new template: ${outputPath}&quot;)
+has context menu
+Compose</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="WLFile" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+
+// Retrieve uniqueValue1 from JMeter properties
+String uniqueValue1 = props.get(&quot;uniqueValue1&quot;)
+
+// Define the format for the next set of sample
+String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|3209874|WFUI NIARD  ZVM|AUHBJRYSFI||||POLITICAL INDIVIDUAL|PEP IO|||||19501030||||||||Belgium|Bahrain||F||INF|||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES&quot;&quot;&quot;
+
+// Define the output file path for the next sample
+String nextOutputPath = &quot;WCFile.txt&quot;
 
 // Write the formatted sample to the file
 Files.write(Paths.get(nextOutputPath), nextSampleFormat.getBytes(StandardCharsets.UTF_8))
@@ -140,30 +199,33 @@ log.info(&quot;Next sample values saved to file: ${nextOutputPath}&quot;)</strin
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Sampler>
         <hashTree/>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Unique Values" enabled="true">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Unique Values" enabled="false">
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
-          <stringProp name="script">import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-// Define the input file path
-String inputFilePath = &quot;input_file.txt&quot;;
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+import java.util.Random
+// Initialize random generator	
+Random rand = new Random()
+// Retrieve all lines from the first output file
+List&lt;String&gt; allLines = Files.readAllLines(Paths.get(&quot;unique_values.txt&quot;), StandardCharsets.UTF_8)
+// Calculate the number of records to select (50% of total)
+int totalRecords = allLines.size()
+int recordsToSelect = totalRecords / 2
+// Shuffle the list to randomize the selection
+Collections.shuffle(allLines, rand)
+// Select the first 50% of the shuffled list
+List&lt;String&gt; selectedRecords = allLines.subList(0, recordsToSelect)
+// Prepare the format for the next set of samples based on the selected records
+List&lt;String&gt; formattedSamples = selectedRecords.collect { uniqueValue1 -&gt; &quot;&quot;&quot;D|${uniqueValue1}|3685564|NUKXXUTJPSCEAAN|VKHRADAK L||||RELIGION||||||19501030|1950/10/30||||||||Bahrain||F||INF|PHDND-MLAO||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES&quot;&quot;&quot;
+}
 // Define the output file path for the next sample
-String nextOutputPath = &quot;next_sample_values.txt&quot;;
-// Read all lines from the input file
-List&lt;String&gt; allRecords = Files.readAllLines(Paths.get(inputFilePath), StandardCharsets.UTF_8);
-// Filter and collect 50% of the records (e.g., every other record)
-List&lt;String&gt; selectedRecords = IntStream.range(0, allRecords.size())
-   .filter(i -&gt; i % 2 == 0) // Pick every other record (this gives 50% of the records)
-   .mapToObj(allRecords::get)
-   .collect(Collectors.toList());
-// Write the selected records to the output file
-Files.write(Paths.get(nextOutputPath), selectedRecords, StandardCharsets.UTF_8);
-log.info(&quot;50% of the records saved to file: &quot; + nextOutputPath);</stringProp>
+String nextOutputPath = &quot;next_sampled_values.txt&quot;
+// Write the formatted samples to the file
+Files.write(Paths.get(nextOutputPath), formattedSamples.join(System.lineSeparator()).getBytes(StandardCharsets.UTF_8))
+log.info(&quot;Next sample values saved to file: ${nextOutputPath}&quot;)</stringProp>
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Sampler>
         <hashTree/>
