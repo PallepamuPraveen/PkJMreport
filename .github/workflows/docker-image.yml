@@ -1,15 +1,29 @@
-name: JMeter Performance Tests
-
-on: workflow_dispatch
+on: [push]
 jobs:
-  test:
-    runs-on: [default-nonprod]
-
+  Main:
+    runs-on: ubuntu-latest
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
 
-    - name: Run JMeter tests
-      run: |
-       docker login hub.docker.internal.cba -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-       docker run --rm --name jmeter -i -v "$(pwd)":/tmp -p 9270:9270 chiabre/jmeter_plugins:5.5-0.1.1 -t SampleAPITest_2mins.jmx
+      - uses: actions/checkout@v3
+      - name: Create reports directory
+        run: mkdir reports
+
+      - name: JMeter Test
+        uses: QAInsights/PerfAction@v3
+        with:
+         test-plan-path: SampleAPITest_2mins.jmx
+         args: "-e -o ./reports/html/"
+    
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+         name: jmeter-results
+         path: result.jtl
+         if-no-files-found: error
+
+      - name: Upload HTML Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-html-reports
+          path: reports
+          if-no-files-found: error
