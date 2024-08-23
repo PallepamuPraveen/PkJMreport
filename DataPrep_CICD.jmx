@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1691300000000</longProp>
+        <longProp name="ThreadGroup.end_time">1691300000000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="ALERT_MATCHES_NONBAU" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+import java.util.Random
+
+// Initialize random generator
+Random rand = new Random()
+
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format(&quot;%06d&quot;, rand.nextInt(900000) + 100000)
+}
+
+// Function to generate an 11-digit number starting with 0
+String generate11DigitNumber(Random rand) {
+    return &quot;0&quot; + String.format(&quot;%010d&quot;, Math.abs(rand.nextLong() % 90000000000L) + 10000000000L)
+}
+
+// List to store all rows
+List&lt;String&gt; rows = new ArrayList&lt;&gt;()
+
+// Generate 100 rows of values
+for (int i = 1; i &lt;= 100; i++) {
+    String uniqueValue1 = generate7DigitNumber(&quot;5&quot;, rand)
+    String uniqueValue2 = generate7DigitNumber(&quot;3&quot;, rand)
+    String uniqueValue3 = generate11DigitNumber(rand)
+
+    // Combine unique values into the specified format
+     String combinedValues = &quot;&quot;&quot;D|${uniqueValue1}|20240501081712|WLM_FullSubjectsVsFullList - 01052024_08:16|FullvFull|SAP~PT~+${uniqueValue3}|CUXHNVXNQD UAJXVDPHUXETQXM|19501030|Female||Sg3|CBA|P|ONBD|Y||||UNK||||CTF|WC APPLICABLE CTF GROUP|${uniqueValue2}|CTF - Delta Personal First Name and Last Name and DOB vs Full WC Individual|CUXHNVXNQD|subject_first_name|CUXHNVXNQD|configuration.detection.check.match.type.exact.match.restrictive|1|&quot;&quot;&quot;.replaceAll(&quot;\\n&quot;, &quot;&quot;)
+   rows.add(combinedValues)
+    
+    // Store uniqueValue1 in a JMeter property for the next sample
+    props.put(&quot;uniqueValue1&quot;, uniqueValue1)
+}
+
+// Define the output file path
+String outputPath = &quot;ALERT_MATCHES_NONBAU.txt&quot;
+
+// Write all rows to the file
+Files.write(Paths.get(outputPath), rows.join(System.lineSeparator()).getBytes(StandardCharsets.UTF_8))
+
+log.info(&quot;Unique values saved to file: ${outputPath}&quot;)</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="ALERT_WL_IWL_NONBAU" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+
+// Retrieve uniqueValue1 from JMeter properties
+String uniqueValue1 = props.get(&quot;uniqueValue1&quot;)
+
+// Define the format for the next set of sample
+String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|FCC-152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2 Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC IB&amp;M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||&quot;&quot;&quot;
+
+// Define the output file path for the next sample
+String nextOutputPath = &quot;ALERT_WL_IWL_NONBAU.txt&quot;
+
+// Write the formatted sample to the file
+Files.write(Paths.get(nextOutputPath), nextSampleFormat.getBytes(StandardCharsets.UTF_8))
+
+log.info(&quot;Next sample values saved to file: ${nextOutputPath}&quot;)
+
+</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="ALERT_WL_WC_NONBAU" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+
+// Retrieve uniqueValue1 from JMeter properties
+String uniqueValue1 = props.get(&quot;uniqueValue1&quot;)
+
+// Define the format for the next set of sample
+String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|3209874|WFUI NIARD  ZVM|AUHBJRYSFI||||POLITICAL INDIVIDUAL|PEP IO|||||19501030||||||||Belgium|Bahrain||F||INF|||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES&quot;&quot;&quot;
+
+// Define the output file path for the next sample
+String nextOutputPath = &quot;ALERT_WL_WC_NONBAU.txt&quot;
+
+// Write the formatted sample to the file
+Files.write(Paths.get(nextOutputPath), nextSampleFormat.getBytes(StandardCharsets.UTF_8))
+
+log.info(&quot;Next sample values saved to file: ${nextOutputPath}&quot;)</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="ALERT_CP_NONBAU_File" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+
+// Retrieve uniqueValue1 from JMeter properties
+String uniqueValue1 = props.get(&quot;uniqueValue1&quot;)
+
+// Define the format for the next set of sample
+String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}D|532081|SAP~PT~+0001430197|N/A|&quot;&quot;&quot;
+
+// Define the output file path for the next sample
+String nextOutputPath = &quot;ALERT_CP_NONBAU.txt&quot;
+
+// Write the formatted sample to the file
+Files.write(Paths.get(nextOutputPath), nextSampleFormat.getBytes(StandardCharsets.UTF_8))
+
+log.info(&quot;Next sample values saved to file: ${nextOutputPath}&quot;)</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="ParentFile_Main" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+
+import java.nio.file.Paths
+
+import java.io.FileWriter
+
+import java.nio.charset.StandardCharsets
+
+import java.util.Random
+
+// Initialize random generator
+
+Random rand = new Random()
+
+// Function to generate a 7-digit number starting with a specified digit
+
+String generate7DigitNumber(String startDigit, Random rand) {
+
+    return startDigit + String.format(&quot;%06d&quot;, rand.nextInt(900000) + 100000)
+
+}
+
+// Function to generate an 11-digit number starting with 0
+
+String generate11DigitNumber(Random rand) {
+
+    return &quot;0&quot; + String.format(&quot;%010d&quot;, Math.abs(rand.nextLong() % 90000000000L) + 10000000000L)
+
+}
+
+// List to store all rows
+
+List&lt;String&gt; rows = new ArrayList&lt;&gt;()
+
+// Generate 100 rows of values
+
+for (int i = 1; i &lt;= 100; i++) {
+
+    String uniqueValue1 = generate7DigitNumber(&quot;5&quot;, rand)
+
+    String uniqueValue2 = generate7DigitNumber(&quot;3&quot;, rand)
+
+    String uniqueValue3 = generate11DigitNumber(rand)
+
+    // Combine unique values into the specified format
+
+     String combinedValues = &quot;&quot;&quot;D|${uniqueValue1}|20240501081712|WLM_FullSubjectsVsFullList - 01052024_08:16|FullvFull|SAP~PT~+${uniqueValue3}|CUXHNVXNQD UAJXVDPHUXETQXM|19501030|Female||Sg3|CBA|P|ONBD|Y||||UNK||||CTF|WC APPLICABLE CTF GROUP|${uniqueValue2}|CTF - Delta Personal First Name and Last Name and DOB vs Full WC Individual|CUXHNVXNQD|subject_first_name|CUXHNVXNQD|configuration.detection.check.match.type.exact.match.restrictive|1|&quot;&quot;&quot;.replaceAll(&quot;\\n&quot;, &quot;&quot;)
+
+   rows.add(combinedValues)
+
+
+new FileWriter(&quot;unique_values.txt&quot;, true).with {
+
+	write(combinedValues  + &quot;\n&quot;)
+
+	close()
+
+}
+
+
+// Define the format for the next set of sample
+
+String nextSampleFormat = &quot;&quot;&quot;D|${uniqueValue1}|FCC-152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2 Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC IB&amp;M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||&quot;&quot;&quot;
+
+new FileWriter(&quot;IWLFile.txt&quot;, true).with {
+
+	write(nextSampleFormat + &quot;\n&quot;)
+
+	close()
+
+}
+
+
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="ParentFile" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.io.FileWriter
+import java.nio.charset.StandardCharsets
+import java.util.Random
+// Initialize random generator
+Random rand = new Random()
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format(&quot;%06d&quot;, rand.nextInt(900000) + 100000)
+}
+// Function to generate an 11-digit number starting with 0
+String generate10DigitNumber(Random rand) {
+    return String.format(&quot;%10d&quot;, Math.abs(rand.nextLong() % 9000000000L) + 1000000000L)
+}
+// List to store all rows
+List&lt;String&gt; rows = new ArrayList&lt;&gt;()
+// Generate 100 rows of values
+for (int i = 1; i &lt;= 150; i++) {
+    String uniqueValue1 = generate7DigitNumber(&quot;5&quot;, rand)
+    String uniqueValue2 = generate7DigitNumber(&quot;3&quot;, rand)
+    String uniqueValue3 = generate10DigitNumber(rand)
+    // Combine unique values into the specified format
+     String combinedValues = &quot;&quot;&quot;D|${uniqueValue1}|20240501081712|WLM_FullSubjectsVsFullList - 01052024_08:16|FullvFull|SAP~PT~+${uniqueValue3}|CUXHNVXNQD UAJXVDPHUXETQXM|19501030|Female||Sg3|CBA|P|ONBD|Y||||UNK||||CTF|WC APPLICABLE CTF GROUP|${uniqueValue2}|CTF - Delta Personal First Name and Last Name and DOB vs Full WC Individual|CUXHNVXNQD|subject_first_name|CUXHNVXNQD|configuration.detection.check.match.type.exact.match.restrictive|1|&quot;&quot;&quot;.replaceAll(&quot;\\n&quot;, &quot;&quot;)
+   rows.add(combinedValues)
+//Parent File
+
+new FileWriter(&quot;ALERT_MATCHES_NONBAU.txt&quot;, true).with {
+	write(combinedValues  + &quot;\n&quot;)
+	close()
+}
+
+// Child 1
+if (i &lt;= 75) {
+
+String nextSampleFormat1 = &quot;&quot;&quot;D|${uniqueValue1}|152069|FCC|Customer Screening - PEP|I-Individual||Test1 Test2 Test3|Test1|Test2|Test3|||Test||Male|Banker|AUS|AUS||||Test|Test|Test|AUS|Test|130013|Test|CBA^~123489033^~C-1234^~cba-123^~Sydney^~AUS|||||Test|Test|Test|||Test|FCC IB&amp;M||2024/03/27||2024/03/27|2024/04/01|Update Review Completed|AUS||||||||||&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_IWL_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat1 + &quot;\n&quot;)
+	close()
+}
+};
+else {
+// Child 2
+String nextSampleFormat2 = &quot;&quot;&quot;D|${uniqueValue1}|3209874|WFUI NIARD  ZVM|AUHBJRYSFI||||POLITICAL INDIVIDUAL|PEP IO|||||19501030||||||||Belgium|Bahrain||F||INF|||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_WC_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat2 + &quot;\n&quot;)
+	close()
+}
+// Child 3
+String nextSampleFormat3 = &quot;&quot;&quot;D|${uniqueValue1}|3209874|WFUI NIARD  ZVM|AUHBJRYSFI||||Child 3|PEP IO|||||19501030||||||||Belgium|Bahrain||F||INF|||C4|20001024|20001024|||CHILD 3&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_CP_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat3 + &quot;\n&quot;)
+	close()
+}
+
+};
+
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="DataPrep" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.io.FileWriter
+import java.nio.charset.StandardCharsets
+import java.util.Random
+// Initialize random generator
+Random rand = new Random()
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format(&quot;%06d&quot;, rand.nextInt(900000) + 100000)
+}
+// Function to generate an 10-digit number starting with 0
+String generate10DigitNumber(Random rand) {
+    return String.format(&quot;%10d&quot;, Math.abs(rand.nextLong() % 9000000000L) + 1000000000L)
+}
+// List to store all rows
+List&lt;String&gt; rows = new ArrayList&lt;&gt;()
+// Generate 100 rows of values
+for (int i = 1; i &lt;= 150; i++) {
+    String uniqueValue1 = generate7DigitNumber(&quot;5&quot;, rand)
+    String uniqueValue2 = generate7DigitNumber(&quot;3&quot;, rand)
+    String uniqueValue3 = generate10DigitNumber(rand)
+    // Combine unique values into the specified format
+     String combinedValues = &quot;&quot;&quot;D|${uniqueValue1}|20240513180421|WLM_FullSubjectsVsDeltaList - 13052024_18:04|Daily|SAP~PT~+${uniqueValue3}|NUHYTGDIHJ CTJSOSHRGRMUAQO|19690324|Female||Sg3|CBA|P|ACTV|Y||||UNK||||PEP|WORLDCHECK|${uniqueValue2}|PEP - Delta Personal Name FuzzyAbr, DOB and Gender vs Full WC Individual|f|subject_gender|F|configuration.detection.check.match.type.exact.match|1|&quot;&quot;&quot;.replaceAll(&quot;\\n&quot;, &quot;&quot;)
+   rows.add(combinedValues)
+//Parent File
+
+new FileWriter(&quot;ALERT_MATCHES_NONBAU.txt&quot;, true).with {
+	write(combinedValues  + &quot;\n&quot;)
+	close()
+}
+
+// Child 1
+if (i &lt;= 75) {
+
+String nextSampleFormat1 = &quot;&quot;&quot;D|${uniqueValue1}|4683387|FCC|Customer Screening - PEP|I-Individual||FIRSTHKCJULLMWL MIDOEQDSCKVTP LASTATX  AUUOU|FIRSTHKCJULLMWL|MIDOEQDSCKVTP|LASTATX  AUUOU||||1950/01/01|F|TC|MYS|MYS|MYS||MYS|MYS||||||||||||INDIVIDUAL||Additional Information||CBA||FCC Business Banking|Snow|2023/05/25|ABC|2023/05/25|2023/06/25|REVIEW-COMPLETED|MYS||||||||||&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_IWL_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat1 + &quot;\n&quot;)
+	close()
+}
+};
+else {
+// Child 2
+String nextSampleFormat2 = &quot;&quot;&quot;D|${uniqueValue1}|3692972|YZVRGCYXMZV LEP|GCZVRJACAN||||POLITICAL INDIVIDUAL|PEP IO|||69|20220101|||||||||Bahrain|Bahrain||F||INF|||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_WC_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat2 + &quot;\n&quot;)
+	close()
+}
+// Child 3
+String nextSampleFormat3 = &quot;&quot;&quot;D|${uniqueValue1}|SAP~PT~+0001548189|DIRC|&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_CP_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat3 + &quot;\n&quot;)
+	close()
+}
+
+};
+
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="DataPrep_Header_Footer" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.io.FileWriter
+import java.nio.charset.StandardCharsets
+import java.util.Random
+import java.util.ArrayList;
+import java.util.List;
+// Initialize random generator
+Random rand = new Random()
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format(&quot;%06d&quot;, rand.nextInt(900000) + 100000)
+}
+// Function to generate an 10-digit number starting with 0
+String generate10DigitNumber(Random rand) {
+    return String.format(&quot;%10d&quot;, Math.abs(rand.nextLong() % 9000000000L) + 1000000000L)
+}
+// List to store all rows
+List&lt;String&gt; rows = new ArrayList&lt;&gt;();
+// Add header to the file
+String header = &quot;H|INETREVEAL|2024-08-02|ALERT_MATCHES&quot;;
+Files.write(Paths.get(&quot;ALERT_MATCHES_NONBAU.txt&quot;), (header + &quot;\n&quot;).getBytes(StandardCharsets.UTF_8));
+// Generate 100 rows of values
+for (int i = 1; i &lt;= 150; i++) {
+    String uniqueValue1 = generate7DigitNumber(&quot;5&quot;, rand)
+    String uniqueValue2 = generate7DigitNumber(&quot;3&quot;, rand)
+    String uniqueValue3 = generate10DigitNumber(rand)
+    // Combine unique values into the specified format
+     String combinedValues = &quot;&quot;&quot;D|${uniqueValue1}|20240513180421|WLM_FullSubjectsVsDeltaList - 13052024_18:04|Daily|SAP~PT~+${uniqueValue3}|NUHYTGDIHJ CTJSOSHRGRMUAQO|19690324|Female||Sg3|CBA|P|ACTV|Y||||UNK||||PEP|WORLDCHECK|${uniqueValue2}|PEP - Delta Personal Name FuzzyAbr, DOB and Gender vs Full WC Individual|f|subject_gender|F|configuration.detection.check.match.type.exact.match|1|&quot;&quot;&quot;.replaceAll(&quot;\\n&quot;, &quot;&quot;)
+   rows.add(combinedValues)
+//Parent File
+
+new FileWriter(&quot;ALERT_MATCHES_NONBAU.txt&quot;, true).with {
+	write(combinedValues  + &quot;\n&quot;)
+	close()
+}
+
+// Child 1
+if (i &lt;= 75) {
+
+String nextSampleFormat1 = &quot;&quot;&quot;D|${uniqueValue1}|4683387|FCC|Customer Screening - PEP|I-Individual||FIRSTHKCJULLMWL MIDOEQDSCKVTP LASTATX  AUUOU|FIRSTHKCJULLMWL|MIDOEQDSCKVTP|LASTATX  AUUOU||||1950/01/01|F|TC|MYS|MYS|MYS||MYS|MYS||||||||||||INDIVIDUAL||Additional Information||CBA||FCC Business Banking|Snow|2023/05/25|ABC|2023/05/25|2023/06/25|REVIEW-COMPLETED|MYS||||||||||&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_IWL_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat1 + &quot;\n&quot;)
+	close()
+}
+};
+else {
+// Child 2
+String nextSampleFormat2 = &quot;&quot;&quot;D|${uniqueValue1}|3692972|YZVRGCYXMZV LEP|GCZVRJACAN||||POLITICAL INDIVIDUAL|PEP IO|||69|20220101|||||||||Bahrain|Bahrain||F||INF|||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_WC_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat2 + &quot;\n&quot;)
+	close()
+}
+// Child 3
+String nextSampleFormat3 = &quot;&quot;&quot;D|${uniqueValue1}|SAP~PT~+0001548189|DIRC|&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_CP_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat3 + &quot;\n&quot;)
+	close()
+}
+
+};
+
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="DataPrep_Header_Footer" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.io.FileWriter
+import java.nio.charset.StandardCharsets
+import java.util.Random
+import java.util.ArrayList;
+import java.util.List;
+// Initialize random generator
+Random rand = new Random()
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format(&quot;%06d&quot;, rand.nextInt(900000) + 100000)
+}
+// Function to generate an 10-digit number starting with 0
+String generate10DigitNumber(Random rand) {
+    return String.format(&quot;%10d&quot;, Math.abs(rand.nextLong() % 9000000000L) + 1000000000L)
+}
+// For dynamic date
+def myDate = &quot;${__time(yyyy-MM-dd)}&quot;
+log.info(&quot;Date: &quot; + myDate)
+// List to store all rows
+List&lt;String&gt; rows = new ArrayList&lt;&gt;();
+// Add header to the file
+String header1 = &quot;H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_MATCHES&quot;;
+String header2 = &quot;H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_WL_IWL&quot;;
+String header3 = &quot;H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_WL_WC&quot;;
+String header4 = &quot;H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_CP&quot;;
+Files.write(Paths.get(&quot;ALERT_MATCHES_NONBAU.txt&quot;), (header1 + &quot;\n&quot;).getBytes(StandardCharsets.UTF_8));
+Files.write(Paths.get(&quot;ALERT_WL_IWL_NONBAU.txt&quot;), (header2 + &quot;\n&quot;).getBytes(StandardCharsets.UTF_8));
+Files.write(Paths.get(&quot;ALERT_WL_WC_NONBAU.txt&quot;), (header3 + &quot;\n&quot;).getBytes(StandardCharsets.UTF_8));
+Files.write(Paths.get(&quot;ALERT_CP_NONBAU.txt&quot;), (header4 + &quot;\n&quot;).getBytes(StandardCharsets.UTF_8));
+// Generate 100 rows of values
+for (int i = 1; i &lt;= 10; i++) {
+    String uniqueValue1 = generate7DigitNumber(&quot;5&quot;, rand)
+    String uniqueValue2 = generate7DigitNumber(&quot;3&quot;, rand)
+    String uniqueValue3 = generate10DigitNumber(rand)
+    // Combine unique values into the specified format
+     String combinedValues = &quot;&quot;&quot;D|${uniqueValue1}|20240513180421|WLM_FullSubjectsVsDeltaList - 13052024_18:04|Daily|SAP~PT~+${uniqueValue3}|NUHYTGDIHJ CTJSOSHRGRMUAQO|19690324|Female||Sg3|CBA|P|ACTV|Y||||UNK||||PEP|WORLDCHECK|${uniqueValue2}|PEP - Delta Personal Name FuzzyAbr, DOB and Gender vs Full WC Individual|f|subject_gender|F|configuration.detection.check.match.type.exact.match|1|&quot;&quot;&quot;.replaceAll(&quot;\\n&quot;, &quot;&quot;)
+   rows.add(combinedValues)
+//Parent File
+
+new FileWriter(&quot;ALERT_MATCHES_NONBAU.txt&quot;, true).with {
+	write(combinedValues  + &quot;\n&quot;)
+	close()
+}
+
+// Child 1
+if (i &lt;= 5) {
+
+String nextSampleFormat1 = &quot;&quot;&quot;D|${uniqueValue1}|4683387|FCC|Customer Screening - PEP|I-Individual||FIRSTHKCJULLMWL MIDOEQDSCKVTP LASTATX  AUUOU|FIRSTHKCJULLMWL|MIDOEQDSCKVTP|LASTATX  AUUOU||||1950/01/01|F|TC|MYS|MYS|MYS||MYS|MYS||||||||||||INDIVIDUAL||Additional Information||CBA||FCC Business Banking|Snow|2023/05/25|ABC|2023/05/25|2023/06/25|REVIEW-COMPLETED|MYS||||||||||&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_IWL_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat1 + &quot;\n&quot;)
+	close()
+}
+};
+else {
+// Child 2
+String nextSampleFormat2 = &quot;&quot;&quot;D|${uniqueValue1}|3692972|YZVRGCYXMZV LEP|GCZVRJACAN||||POLITICAL INDIVIDUAL|PEP IO|||69|20220101|||||||||Bahrain|Bahrain||F||INF|||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_WL_WC_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat2 + &quot;\n&quot;)
+	close()
+}
+// Child 3
+String nextSampleFormat3 = &quot;&quot;&quot;D|${uniqueValue1}|SAP~PT~+0001548189|DIRC|&quot;&quot;&quot;
+new FileWriter(&quot;ALERT_CP_NONBAU.txt&quot;, true).with {
+	write(nextSampleFormat3 + &quot;\n&quot;)
+	close()
+}
+
+};
+}
+// Add footer to the file.
+String footer1 = &quot;T|&quot; + rows.size();
+try (FileWriter fw = new FileWriter(&quot;ALERT_MATCHES_NONBAU.txt&quot;, true)) {
+   fw.write(footer1 + &quot;\n&quot;);
+}
+String footer2 = &quot;T|&quot; + rows.size();
+try (FileWriter fw = new FileWriter(&quot;ALERT_WL_IWL_NONBAU.txt&quot;, true)) {
+   fw.write(footer2 + &quot;\n&quot;);
+}
+String footer3 = &quot;T|&quot; + rows.size();
+try (FileWriter fw = new FileWriter(&quot;ALERT_WL_WC_NONBAU.txt&quot;, true)) {
+   fw.write(footer3 + &quot;\n&quot;);
+}
+String footer4 = &quot;T|&quot; + rows.size();
+try (FileWriter fw = new FileWriter(&quot;ALERT_CP_NONBAU.txt&quot;, true)) {
+   fw.write(footer4 + &quot;\n&quot;);
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
