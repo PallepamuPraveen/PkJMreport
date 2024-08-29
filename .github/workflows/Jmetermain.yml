@@ -41,7 +41,4 @@ jobs:
          for i in $( ls $GITHUB_WORKSPACE/*.jmx); do
             ./jmeter -n -t $i -l result.jtl;
          done
-      
-   
-      
-Add files via upload · poosalas24/GDemo@3215a61 · GitHub
+     
