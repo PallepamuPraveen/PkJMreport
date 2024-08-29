@@ -1,34 +1,4 @@
-Skip to content
-Navigation Menu
-Product
-Solutions
-Resources
-Open Source
-Enterprise
-Pricing
-
-Search or jump to...
-Sign in
-Sign up
-poosalas24
-/
-GDemo
-Public
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-jmeterExecution 8:30
-jmeterExecution 8:30 #1819
-Jobs
-Run details
-Workflow file for this run
-.github/workflows/main.yml at 3215a61
-# This is a workflow to help you run all JMeter scripts with Actions
-name: jmeterExecution 8:30
+name: jmeterExecutionGit
 on:
  schedule: 
  - cron: "30 8 * * 1-5"
