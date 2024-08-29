@@ -1,29 +1,77 @@
-on: [push]
+Skip to content
+Navigation Menu
+Product
+Solutions
+Resources
+Open Source
+Enterprise
+Pricing
+
+Search or jump to...
+Sign in
+Sign up
+poosalas24
+/
+GDemo
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+jmeterExecution 8:30
+jmeterExecution 8:30 #1819
+Jobs
+Run details
+Workflow file for this run
+.github/workflows/main.yml at 3215a61
+# This is a workflow to help you run all JMeter scripts with Actions
+name: jmeterExecution 8:30
+on:
+ schedule: 
+ - cron: "30 8 * * 1-5"
+ push:
+    branches: [ main ]
+# Allows you to run this workflow manually from the Actions tab
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  Main:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - name: Create reports directory
-        run: mkdir reports
-
-      - name: JMeter Test
-        uses: QAInsights/PerfAction@v5.6.2
-        with:
-         test-plan-path: SampleAPITest_2mins.jmx
-         args: "-e -o ./reports/html/"
-    
-      - name: Upload Results
-        uses: actions/upload-artifact@v3
-        with:
-         name: jmeter-results
-         path: result.jtl
-         if-no-files-found: error
-
-      - name: Upload HTML Reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: jmeter-html-reports
-          path: reports
-          if-no-files-found: error
+      - name: where are the files?
+        run: |
+           pwd
+           ls
+      # Runs a set of commands using the runners shell
+      - name: install jmeter
+        run: |
+          java -version
+          wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip
+          unzip apache-jmeter-5.6.3.zip
+          cd apache-jmeter-5.6.3/bin
+          ./jmeter -v
+          pwd
+      - name: install plugins
+        run: |
+          cd $GITHUB_WORKSPACE/apache-jmeter-5.6.3
+          wget -q --no-check-certificate https://jmeter-plugins.org/files/packages/jpgc-dummy-0.4.zip  -P .
+          unzip -o jpgc-dummy-0.4.zip  && rm jpgc-dummy-0.4.zip
+      - name: run jmx scripts
+        run: |
+         cd $GITHUB_WORKSPACE/apache-jmeter-5.6.3/bin
+         for i in $( ls $GITHUB_WORKSPACE/*.jmx); do
+            ./jmeter -n -t $i -l result.jtl;
+         done
+      
+   
+      
+Add files via upload · poosalas24/GDemo@3215a61 · GitHub
