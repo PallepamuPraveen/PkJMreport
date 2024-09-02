@@ -1,0 +1,93 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.io.FileWriter
+import java.nio.charset.StandardCharsets
+import java.util.Random
+import java.util.ArrayList;
+import java.util.List;
+// Initialize random generator
+Random rand = new Random()
+// Function to generate a 7-digit number starting with a specified digit
+String generate7DigitNumber(String startDigit, Random rand) {
+    return startDigit + String.format("%06d", rand.nextInt(900000) + 100000)
+}
+// Function to generate an 10-digit number starting with 0
+String generate10DigitNumber(Random rand) {
+    return String.format("%10d", Math.abs(rand.nextLong() % 9000000000L) + 1000000000L)
+}
+// For dynamic date
+def myDate = "${__time(yyyy-MM-dd)}"
+log.info("Date: " + myDate)
+// List to store all rows
+List<String> rows = new ArrayList<>();
+// Add header to the file
+String header1 = "H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_MATCHES";
+String header2 = "H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_WL_IWL";
+String header3 = "H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_WL_WC";
+String header4 = "H|INETREVEAL|${__time(yyyy-MM-dd,)}|ALERT_CP";
+Files.write(Paths.get("ALERT_MATCHES_NONBAU.txt"), (header1 + "\n").getBytes(StandardCharsets.UTF_8));
+Files.write(Paths.get("ALERT_WL_IWL_NONBAU.txt"), (header2 + "\n").getBytes(StandardCharsets.UTF_8));
+Files.write(Paths.get("ALERT_WL_WC_NONBAU.txt"), (header3 + "\n").getBytes(StandardCharsets.UTF_8));
+Files.write(Paths.get("ALERT_CP_NONBAU.txt"), (header4 + "\n").getBytes(StandardCharsets.UTF_8));
+// Generate 1.5M rows of values
+for (int i = 1; i <= 10; i++) {
+    String uniqueValue1 = generate7DigitNumber("5", rand)
+    String uniqueValue2 = generate7DigitNumber("3", rand)
+    String uniqueValue3 = generate10DigitNumber(rand)
+    // Combine unique values into the specified format
+     String combinedValues = """D|${uniqueValue1}|20240513180421|WLM_FullSubjectsVsDeltaList - 13052024_18:04|Daily|SAP~PT~+${uniqueValue3}|NUHYTGDIHJ CTJSOSHRGRMUAQO|19690324|Female||Sg3|CBA|P|ACTV|Y||||UNK||||PEP|WORLDCHECK|${uniqueValue2}|PEP - Delta Personal Name FuzzyAbr, DOB and Gender vs Full WC Individual|f|subject_gender|F|configuration.detection.check.match.type.exact.match|1|""".replaceAll("\\n", "")
+   rows.add(combinedValues)
+//Parent File
+
+new FileWriter("ALERT_MATCHES_NONBAU.txt", true).with {
+	write(combinedValues  + "\n")
+	close()
+}
+
+// Child 1
+if (i <= 5) {
+
+String nextSampleFormat1 = """D|${uniqueValue1}|4683387|FCC|Customer Screening - PEP|I-Individual||FIRSTHKCJULLMWL MIDOEQDSCKVTP LASTATX  AUUOU|FIRSTHKCJULLMWL|MIDOEQDSCKVTP|LASTATX  AUUOU||||1950/01/01|F|TC|MYS|MYS|MYS||MYS|MYS||||||||||||INDIVIDUAL||Additional Information||CBA||FCC Business Banking|Snow|2023/05/25|ABC|2023/05/25|2023/06/25|REVIEW-COMPLETED|MYS||||||||||"""
+new FileWriter("ALERT_WL_IWL_NONBAU.txt", true).with {
+	write(nextSampleFormat1 + "\n")
+	close()
+}
+};
+else {
+// Child 2
+String nextSampleFormat2 = """D|${uniqueValue1}|3692972|YZVRGCYXMZV LEP|GCZVRJACAN||||POLITICAL INDIVIDUAL|PEP IO|||69|20220101|||||||||Bahrain|Bahrain||F||INF|||C4|20001024|20001024|||SPECIAL INTEREST CATEGORIES"""
+new FileWriter("ALERT_WL_WC_NONBAU.txt", true).with {
+	write(nextSampleFormat2 + "\n")
+	close()
+}
+// Child 3
+String nextSampleFormat3 = """D|${uniqueValue1}|SAP~PT~+0001548189|DIRC|"""
+new FileWriter("ALERT_CP_NONBAU.txt", true).with {
+	write(nextSampleFormat3 + "\n")
+	close()
+}
+};
+}
+// Calculate the footer for the first file
+String footer = "T|" + rows.size();
+try (FileWriter fw = new FileWriter("ALERT_MATCHES_NONBAU.txt", true)) {
+	   fw.write(footer + "\n");
+}
+// Calculate the footer for the first file
+String footer1 = "T|" + rows.size()/2;
+try (FileWriter fw = new FileWriter("ALERT_WL_IWL_NONBAU.txt", true)) {
+   fw.write(footer1 + "\n");
+}
+
+try (FileWriter fw = new FileWriter("ALERT_WL_WC_NONBAU.txt", true)) {
+   fw.write(footer1 + "\n");
+}
+
+try (FileWriter fw = new FileWriter("ALERT_CP_NONBAU.txt", true)) {
+   fw.write(footer1 + "\n");
+}
+
+//ALERT_MATCHES_NONBAU1
+//ALERT_WL_IWL_NONBAU
+//ALERT_WL_WC_NONBAU
+//ALERT_CP_NONBAU
