@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <com.di.jmeter.kafka.sampler.KafkaProducerSampler guiclass="TestBeanGUI" testclass="com.di.jmeter.kafka.sampler.KafkaProducerSampler" testname="Kafka Producer Sampler" enabled="false">
+          <stringProp name="kafkaMessage">{
+    &quot;event_schema_id&quot;: &quot;2253&quot;,
+    &quot;event&quot;: {
+        &quot;amlLoadAssurance&quot;: {
+            &quot;loadCount&quot;: {
+                &quot;array&quot;: [
+                    {
+                        &quot;fromDate&quot;: &quot;2023-11-19T00:00:00.000+11:00&quot;,
+                        &quot;feedbackTotalCount&quot;: 0,
+                        &quot;toDate&quot;: &quot;2023-11-20T00:00:00.000+11:00&quot;,
+                        &quot;jarvisProcessName&quot;: &quot;CUSTOMERSANCTIONS-JARVIS-FINAL&quot;
+                    },
+                    {
+                        &quot;fromDate&quot;: &quot;2023-11-19T00:00:00.000+11:00&quot;,
+                        &quot;feedbackTotalCount&quot;: 0,
+                        &quot;toDate&quot;: &quot;2023-11-20T00:00:00.000+11:00&quot;,
+                        &quot;jarvisProcessName&quot;: &quot;CUSTOMERSANCTIONS-JARVIS-INT&quot;
+                    }
+                ]
+            }
+        },
+        &quot;nestedMetricsMap&quot;: {
+            &quot;map&quot;: {
+                &quot;relatedParties&quot;: 0
+            }
+        },
+        &quot;header&quot;: {
+            &quot;processPath&quot;: [
+                {
+                    &quot;source&quot;: &quot;Jarvis&quot;,
+                    &quot;timestamp&quot;: &quot;2023-11-20T21:46:44.884+11:00&quot;
+                }
+            ],
+            &quot;correlationId&quot;: &quot;${TopicCorrelation}&quot;
+        },
+        &quot;businessEventCount&quot;: {
+            &quot;long&quot;: 1
+        },
+        &quot;batchIdentifier&quot;: {
+            &quot;au.com.cba.fcp.BatchIdentifierElement&quot;: {
+                &quot;endTimestamp&quot;: {
+                    &quot;string&quot;: &quot;2023-11-20T00:00:00.000+11:00&quot;
+                },
+                &quot;businessEventTopicName&quot;: {
+                    &quot;string&quot;: &quot;GroupOps-FinancialCrimes-CaseManagement-CaseStatus&quot;
+                },
+                &quot;startTimestamp&quot;: {
+                    &quot;string&quot;: &quot;2023-11-19T00:00:00.000+11:00&quot;
+                }
+            }
+        }
+    }
+}</stringProp>
+          <stringProp name="kafkaMessageKey">Key</stringProp>
+          <stringProp name="kafkaProducerClientVariableName">KafkaProducerClient</stringProp>
+          <stringProp name="kafkaTopic">GroupOps-FinCrimes-SiriusCaseManagement-CaseControl</stringProp>
+          <collectionProp name="messageHeaders"/>
+          <stringProp name="partitionString"></stringProp>
+        </com.di.jmeter.kafka.sampler.KafkaProducerSampler>
+        <hashTree>
+          <com.di.jmeter.kafka.config.KafkaProducerConfig guiclass="TestBeanGUI" testclass="com.di.jmeter.kafka.config.KafkaProducerConfig" testname="Kafka Producer Config" enabled="true">
+            <stringProp name="batchSize">1</stringProp>
+            <stringProp name="clientId"></stringProp>
+            <collectionProp name="extraConfigs"/>
+            <stringProp name="kafkaBrokers">node1.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093,node2.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093,node3.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093,node4.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093</stringProp>
+            <stringProp name="kafkaProducerClientVariableName">KafkaProducerClient</stringProp>
+            <stringProp name="kafkaSslKeystore">C:\apache-jmeter-5.5_TopicTesting_viaCert\apache-jmeter-5.5\bin\sirius.test.jks</stringProp>
+            <stringProp name="kafkaSslKeystorePassword">siriusTEST@2023</stringProp>
+            <stringProp name="kafkaSslPrivateKeyPass">siriusTEST@2023</stringProp>
+            <stringProp name="kafkaSslTruststore">C:\apache-jmeter-5.5_TopicTesting_viaCert\apache-jmeter-5.5\bin\sirius.test.jks</stringProp>
+            <stringProp name="kafkaSslTruststorePassword">siriusTEST@2023</stringProp>
+            <stringProp name="securityType">securityType.ssl</stringProp>
+            <stringProp name="serializerKey">org.apache.kafka.common.serialization.StringSerializer</stringProp>
+            <stringProp name="serializerValue">org.apache.kafka.common.serialization.StringSerializer</stringProp>
+          </com.di.jmeter.kafka.config.KafkaProducerConfig>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+        <com.di.jmeter.kafka.sampler.KafkaProducerSampler guiclass="TestBeanGUI" testclass="com.di.jmeter.kafka.sampler.KafkaProducerSampler" testname="Kafka Producer Sampler_NFT" enabled="true">
+          <stringProp name="kafkaMessage">{
+    &quot;event_schema_id&quot;: &quot;2253&quot;,
+    &quot;event&quot;: {
+        &quot;amlLoadAssurance&quot;: {
+            &quot;loadCount&quot;: {
+                &quot;array&quot;: [
+                    {
+                        &quot;fromDate&quot;: &quot;2023-11-19T00:00:00.000+11:00&quot;,
+                        &quot;feedbackTotalCount&quot;: 0,
+                        &quot;toDate&quot;: &quot;2023-11-20T00:00:00.000+11:00&quot;,
+                        &quot;jarvisProcessName&quot;: &quot;CUSTOMERSANCTIONS-JARVIS-FINAL&quot;
+                    },
+                    {
+                        &quot;fromDate&quot;: &quot;2023-11-19T00:00:00.000+11:00&quot;,
+                        &quot;feedbackTotalCount&quot;: 0,
+                        &quot;toDate&quot;: &quot;2023-11-20T00:00:00.000+11:00&quot;,
+                        &quot;jarvisProcessName&quot;: &quot;CUSTOMERSANCTIONS-JARVIS-INT&quot;
+                    }
+                ]
+            }
+        },
+        &quot;nestedMetricsMap&quot;: {
+            &quot;map&quot;: {
+                &quot;relatedParties&quot;: 0
+            }
+        },
+        &quot;header&quot;: {
+            &quot;processPath&quot;: [
+                {
+                    &quot;source&quot;: &quot;Jarvis&quot;,
+                    &quot;timestamp&quot;: &quot;2023-11-20T21:46:44.884+11:00&quot;
+                }
+            ],
+            &quot;correlationId&quot;: &quot;${TopicCorrelation}&quot;
+        },
+        &quot;businessEventCount&quot;: {
+            &quot;long&quot;: 1
+        },
+        &quot;batchIdentifier&quot;: {
+            &quot;au.com.cba.fcp.BatchIdentifierElement&quot;: {
+                &quot;endTimestamp&quot;: {
+                    &quot;string&quot;: &quot;2023-11-20T00:00:00.000+11:00&quot;
+                },
+                &quot;businessEventTopicName&quot;: {
+                    &quot;string&quot;: &quot;GroupOps-FinancialCrimes-CaseManagement-CaseStatus&quot;
+                },
+                &quot;startTimestamp&quot;: {
+                    &quot;string&quot;: &quot;2023-11-19T00:00:00.000+11:00&quot;
+                }
+            }
+        }
+    }
+}</stringProp>
+          <stringProp name="kafkaMessageKey"></stringProp>
+          <stringProp name="kafkaProducerClientVariableName">KafkaProducerClient</stringProp>
+          <stringProp name="kafkaTopic">GroupOps-FinCrimes-SiriusCaseManagement-CaseControl</stringProp>
+          <collectionProp name="messageHeaders">
+            <elementProp name="" elementType="com.di.jmeter.kafka.utils.VariableSettings">
+              <stringProp name="headerKey">Content-Type</stringProp>
+              <stringProp name="headerValue">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="com.di.jmeter.kafka.utils.VariableSettings">
+              <stringProp name="headerKey">userid</stringProp>
+              <stringProp name="headerValue">Test</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="com.di.jmeter.kafka.utils.VariableSettings">
+              <stringProp name="headerKey">cba-api-key</stringProp>
+              <stringProp name="headerValue">21f6a2bd-7f7c-310f-e053-3619f40adf17</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="com.di.jmeter.kafka.utils.VariableSettings">
+              <stringProp name="headerKey">correlationid</stringProp>
+              <stringProp name="headerValue">123456</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="com.di.jmeter.kafka.utils.VariableSettings">
+              <stringProp name="headerKey">useridtype</stringProp>
+              <stringProp name="headerValue">LAN Id</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="com.di.jmeter.kafka.utils.VariableSettings">
+              <stringProp name="headerKey">URL</stringProp>
+              <stringProp name="headerValue">https://hasyd1-int-evh-kafkaapi-nft.query.syd1.sd.nprod.cba</stringProp>
+            </elementProp>
+          </collectionProp>
+          <stringProp name="partitionString"></stringProp>
+        </com.di.jmeter.kafka.sampler.KafkaProducerSampler>
+        <hashTree>
+          <com.di.jmeter.kafka.config.KafkaProducerConfig guiclass="TestBeanGUI" testclass="com.di.jmeter.kafka.config.KafkaProducerConfig" testname="Kafka Producer Config" enabled="true">
+            <stringProp name="batchSize">1</stringProp>
+            <stringProp name="clientId"></stringProp>
+            <collectionProp name="extraConfigs">
+              <elementProp name="" elementType="com.di.jmeter.kafka.utils.VariableSettings">
+                <stringProp name="configKey">schema.registry.url</stringProp>
+                <stringProp name="configValue">https://hasyd1-int-evh-schemaregistry-nft.query.syd1.sd.nprod.cba:8081</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="kafkaBrokers">node1.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093,node2.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093,node3.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093,node4.int-evh-bootstrap-nft.service.syd1.sd.nprod.cba:9093</stringProp>
+            <stringProp name="kafkaProducerClientVariableName">KafkaProducerClient</stringProp>
+            <stringProp name="kafkaSslKeystore">C:\apache-jmeter-5.5_TopicTesting_viaCert\apache-jmeter-5.5\bin\sirius.test.jks</stringProp>
+            <stringProp name="kafkaSslKeystorePassword">siriusTEST@2023</stringProp>
+            <stringProp name="kafkaSslPrivateKeyPass">siriusTEST@2023</stringProp>
+            <stringProp name="kafkaSslTruststore">C:\apache-jmeter-5.5_TopicTesting_viaCert\apache-jmeter-5.5\bin\sirius.test.jks</stringProp>
+            <stringProp name="kafkaSslTruststorePassword">siriusTEST@2023</stringProp>
+            <stringProp name="securityType">securityType.ssl</stringProp>
+            <stringProp name="serializerKey">org.apache.kafka.common.serialization.StringSerializer</stringProp>
+            <stringProp name="serializerValue">org.apache.kafka.common.serialization.StringSerializer</stringProp>
+            <stringProp name="TestPlan.comments">org.apache.kafka.common.serialization.StringSerializer / io.confluent.kafka.serializers.KafkaAvroSerializer / io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde</stringProp>
+          </com.di.jmeter.kafka.config.KafkaProducerConfig>
+          <hashTree/>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+            <stringProp name="filename">TopicCorrelation 1.csv</stringProp>
+            <stringProp name="fileEncoding"></stringProp>
+            <stringProp name="variableNames">TopicCorrelation</stringProp>
+            <boolProp name="ignoreFirstLine">true</boolProp>
+            <stringProp name="delimiter">,</stringProp>
+            <boolProp name="quotedData">false</boolProp>
+            <boolProp name="recycle">true</boolProp>
+            <boolProp name="stopThread">false</boolProp>
+            <stringProp name="shareMode">shareMode.all</stringProp>
+          </CSVDataSet>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-202516509">Success</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Flow Control Action" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">400</stringProp>
+        </TestAction>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
